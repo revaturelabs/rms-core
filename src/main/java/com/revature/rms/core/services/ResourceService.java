@@ -14,8 +14,8 @@ import reactor.core.publisher.Mono;
 
 public abstract class ResourceService<T extends Resource> {
 
-    private final ReactiveMongoRepository<T, String> repo;
-    private final ReactiveMongoTemplate mongoTemplate;
+    protected final ReactiveMongoRepository<T, String> repo;
+    protected final ReactiveMongoTemplate mongoTemplate;
 
     public ResourceService(ReactiveMongoRepository<T, String> repo, ReactiveMongoTemplate template) {
         this.repo = repo;
