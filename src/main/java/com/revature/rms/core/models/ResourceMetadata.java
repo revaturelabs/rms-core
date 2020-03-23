@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 /**
  * A model which is embedded into all Resource documents and is used to convey
  * system information.
+ *
+ * @author Wezley Singleton (GitHub: wsingleton)
+ *
  */
 public class ResourceMetadata {
 
