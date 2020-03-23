@@ -14,6 +14,15 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * Serves as a base implementation for business controller classes that handle requests
+ * related to resource types.
+ *
+ * @param <T>
+ *
+ * @author Wezley Singleton (Github: wsingleton)
+ *
+ */
 public abstract class ResourceController<T extends Resource> {
 
     protected final ResourceService<T> service;
@@ -57,31 +66,31 @@ public abstract class ResourceController<T extends Resource> {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Mono<ErrorResponse> handleInvalidRequestException(InvalidRequestException e) {
-        return Mono.just(new ErrorResponse(HttpStatus.BAD_REQUEST, e));
+        return Mono.just(new ErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage()));
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Mono<ErrorResponse> handleRetrievalException(ResourceRetrievalException e) {
-        return Mono.just(new ErrorResponse(HttpStatus.NOT_FOUND, e));
+        return Mono.just(new ErrorResponse(HttpStatus.NOT_FOUND, e.getMessage()));
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public Mono<ErrorResponse> handlePersistenceException(ResourcePersistenceException e) {
-        return Mono.just(new ErrorResponse(HttpStatus.CONFLICT, e));
+        return Mono.just(new ErrorResponse(HttpStatus.CONFLICT, e.getMessage()));
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Mono<ErrorResponse> handleInternalServerException(InternalServerException e) {
-        return Mono.just(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e));
+        return Mono.just(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
     public Mono<ErrorResponse> handleNoImplementationException(NoImplementationException e) {
-        return Mono.just(new ErrorResponse(HttpStatus.CONFLICT, e));
+        return Mono.just(new ErrorResponse(HttpStatus.CONFLICT, e.getMessage()));
     }
 
 }

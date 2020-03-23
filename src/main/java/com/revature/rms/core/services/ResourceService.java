@@ -12,6 +12,15 @@ import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * Serves as a base implementation for business service classes that handle resources
+ * coming from the controller layer.
+ *
+ * @param <T>
+ *
+ * @author Wezley Singleton (Github: wsingleton)
+ *
+ */
 public abstract class ResourceService<T extends Resource> {
 
     protected final ReactiveMongoRepository<T, String> repo;

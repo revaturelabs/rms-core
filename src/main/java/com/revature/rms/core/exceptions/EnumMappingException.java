@@ -1,5 +1,8 @@
 package com.revature.rms.core.exceptions;
 
+/**
+ * @author Wezley Singleton (GitHub: wsingleton)
+ */
 public class EnumMappingException extends InvalidRequestException {
 
     public EnumMappingException() {

@@ -12,6 +12,8 @@ import java.util.Arrays;
 /**
  * Manages the logging aspect of microservices. Currently set up to log method invocations,
  * successful completion of methods, and the throwing of exceptions during method execution.
+ *
+ * @author Wezley Singleton (Github: wsingleton)
  */
 @Aspect
 @Component
@@ -20,7 +22,7 @@ public class LoggingAspect {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * This pointcut joins to all joinpoints in the com.revature.rms package and all of its
+     * This pointcut matching to all joinpoints in the com.revature.rms package and all of its
      * sub-packages.
      */
     @Pointcut("within(com.revature.rms..*)")
@@ -31,7 +33,7 @@ public class LoggingAspect {
      * Information logged includes the qualified name of the method invoked and the local time of its
      * invocation. Values of the input arguments are also present for debugging purposes.
      *
-     * @param jp - A point during the execution of the program (the start of a method in Spring).
+     * @param jp - A point during the execution of the program
      */
     @Before("logAll()")
     public void logMethodStart(JoinPoint jp) {
@@ -46,8 +48,8 @@ public class LoggingAspect {
      * qualified name of the method invoked and the local time of its successful completion. The value
      * of the returned object is present as well for debugging purposes.
      *
-     * @param jp - A point during the execution of the program (the start of a method in Spring).
-     * @param returned - The object that will be returned by the method being advised.
+     * @param jp - A point during the execution of the program
+     * @param returned - The object that will be returned by the method being advised
      */
     @AfterReturning(pointcut = "logAll()", returning = "returned")
     public void logMethodReturn(JoinPoint jp, Object returned) {
@@ -60,8 +62,8 @@ public class LoggingAspect {
      * Logs basic information when a method throws any exception. Information logged includes the
      * qualified name of the method invoked and the local time when the exception was thrown.
      *
-     * @param jp - A point during the execution of the program (the start of a method in Spring).
-     * @param e - The exception that was thrown by the method being advised.
+     * @param jp - A point during the execution of the program
+     * @param e - The exception that was thrown by the method being advised
      */
     @AfterThrowing(pointcut = "logAll()", throwing = "e")
     public void errorOccurrence(JoinPoint jp, Exception e) {
