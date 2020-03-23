@@ -12,6 +12,8 @@ import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
+
 /**
  * Serves as a base implementation for business service classes that handle resources
  * coming from the controller layer.
@@ -45,10 +47,14 @@ public abstract class ResourceService<T extends Resource> {
 
     }
 
+    public Flux<T> findAll(Iterable<String> ids) {
+        return repo.findAllById(ids);
+    }
+
     public Mono<T> findById(String id) {
 
         return repo.findById(id)
-                   .switchIfEmpty(Mono.error(ResourceRetrievalException::new));
+                    .switchIfEmpty(Mono.error(ResourceRetrievalException::new));
 
     }
 
@@ -67,13 +73,18 @@ public abstract class ResourceService<T extends Resource> {
     }
 
     public Mono<Void> deleteById(String id) {
+        return this.deleteAllById(Collections.singletonList(id)).then();
+    }
 
-        return repo.findById(id)
-                   .flatMap(resource -> {
-                       Query query = new Query().addCriteria(Criteria.where("id").is(id));
-                       resource.getMetadata().setActive(false);
-                       return mongoTemplate.findAndReplace(query, resource).then();
+    public Flux<Void> deleteAllById(Iterable<String> ids) {
+
+        return repo.findAllById(ids)
+                    .flatMap(resource -> {
+                        Query query = new Query().addCriteria(Criteria.where("id").is(resource.getId()));
+                        resource.getMetadata().setActive(false);
+                        return mongoTemplate.findAndReplace(query, resource).then();
                     });
 
     }
+
 }
