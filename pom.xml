@@ -24,6 +24,18 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>5.2.4.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-webflux</artifactId>
             <version>5.2.4.RELEASE</version>
         </dependency>
@@ -34,8 +46,6 @@
             <version>2.0.1.Final</version>
         </dependency>
 
-
     </dependencies>
-
 
 </project>
