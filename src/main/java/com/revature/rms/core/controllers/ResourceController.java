@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 
 public abstract class ResourceController<T extends Resource> {
 
-    private final ResourceService<T> service;
+    protected final ResourceService<T> service;
 
     public ResourceController(ResourceService service) {
         this.service = service;
