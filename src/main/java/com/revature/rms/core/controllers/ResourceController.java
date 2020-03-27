@@ -90,7 +90,7 @@ public abstract class ResourceController<T extends Resource> {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
     public Mono<ErrorResponse> handleNoImplementationException(NoImplementationException e) {
-        return Mono.just(new ErrorResponse(HttpStatus.CONFLICT, e.getMessage()));
+        return Mono.just(new ErrorResponse(HttpStatus.NOT_IMPLEMENTED, e.getMessage()));
     }
 
 }
