@@ -48,4 +48,12 @@
 
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Revature Labs Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/revaturelabs/rms-core</url>
+        </repository>
+    </distributionManagement>
+
 </project>
