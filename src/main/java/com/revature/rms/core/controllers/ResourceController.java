@@ -46,6 +46,11 @@ public abstract class ResourceController<T extends Resource> {
         return service.findById(id);
     }
 
+    @GetMapping("/myResources/{ownerId}")
+    public Flux<Resource> findMyResources(String ownerId) {
+        return service.findMyResources(ownerId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<T> save(@RequestBody @Valid T newObj) {

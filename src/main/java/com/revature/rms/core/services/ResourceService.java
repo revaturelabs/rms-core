@@ -47,6 +47,13 @@ public abstract class ResourceService<T extends Resource> {
 
     }
 
+    public Flux<Resource> findMyResources(String resourceOwnerId) {
+
+        Query query = new Query().addCriteria(Criteria.where("metadata.resourceOwnerId").is(resourceOwnerId));
+        return mongoTemplate.find(query, Resource.class);
+
+    }
+
     public Flux<T> findAll(Iterable<String> ids) {
         return repo.findAllById(ids);
     }
