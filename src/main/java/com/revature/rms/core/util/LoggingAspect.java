@@ -16,8 +16,7 @@ import java.util.Arrays;
  * @author Wezley Singleton (Github: wsingleton)
  */
 @Aspect
-@Component
-public class LoggingAspect {
+public abstract class LoggingAspect {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

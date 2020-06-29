@@ -1,6 +1,8 @@
 package com.revature.rms.core.models;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * An abstract representation of a Resource.
@@ -8,14 +10,15 @@ import org.springframework.data.annotation.Id;
  * @author Wezley Singleton (GitHub: wsingleton)
  *
  */
+@Document
 public abstract class Resource {
-
 
     /** A unique id string for this resource */
     @Id
     protected String id;
 
     /** System information related to this resource */
+    @Field("metadata")
     protected ResourceMetadata metadata;
 
     public Resource() {
