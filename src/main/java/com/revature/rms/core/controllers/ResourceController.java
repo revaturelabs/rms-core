@@ -37,7 +37,7 @@ public abstract class ResourceController<T extends Resource> {
     }
 
     @GetMapping("/search")
-    public Flux<T> findBy(@RequestParam MultiValueMap<String, String> params) {
+    public Flux<? extends Resource> findBy(@RequestParam MultiValueMap<String, String> params) {
         return service.findAll(params);
     }
 
