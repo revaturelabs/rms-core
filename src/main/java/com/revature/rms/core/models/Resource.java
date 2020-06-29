@@ -4,6 +4,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 /**
  * An abstract representation of a Resource.
  *
@@ -18,7 +21,7 @@ public abstract class Resource {
     protected String id;
 
     /** System information related to this resource */
-    @Field("metadata")
+    @NotNull @Field("metadata")
     protected ResourceMetadata metadata;
 
     public Resource() {
