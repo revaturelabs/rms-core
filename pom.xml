@@ -6,7 +6,7 @@
 
     <groupId>com.revature.rms</groupId>
     <artifactId>rms-core</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>rms-core</name>
 
     <properties>
