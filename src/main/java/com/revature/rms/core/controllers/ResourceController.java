@@ -47,7 +47,7 @@ public abstract class ResourceController<T extends Resource> {
     }
 
     @GetMapping("/myResources/{ownerId}")
-    public Flux<Resource> findMyResources(String ownerId) {
+    public Flux<? extends Resource> findMyResources(@PathVariable String ownerId) {
         return service.findMyResources(ownerId);
     }
 
