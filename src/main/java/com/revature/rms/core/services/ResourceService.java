@@ -1,12 +1,13 @@
 package com.revature.rms.core.services;
 
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 import com.revature.rms.core.exceptions.NoImplementationException;
 import com.revature.rms.core.exceptions.ResourcePersistenceException;
 import com.revature.rms.core.exceptions.ResourceRetrievalException;
 import com.revature.rms.core.models.Resource;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
@@ -27,10 +28,12 @@ public abstract class ResourceService<T extends Resource> {
 
     protected final ReactiveMongoRepository<T, String> repo;
     protected final ReactiveMongoTemplate mongoTemplate;
+    private final Class<? extends Resource> resourceType;
 
-    public ResourceService(ReactiveMongoRepository<T, String> repo, ReactiveMongoTemplate template) {
+    public ResourceService(ReactiveMongoRepository<T, String> repo, ReactiveMongoTemplate template, Class<? extends Resource> resourceType) {
         this.repo = repo;
         this.mongoTemplate = template;
+        this.resourceType = resourceType;
     }
 
     public Flux<T> findAll() {
@@ -47,10 +50,9 @@ public abstract class ResourceService<T extends Resource> {
 
     }
 
-    public Flux<Resource> findMyResources(String resourceOwnerId) {
-
-        Query query = new Query().addCriteria(Criteria.where("metadata.resourceOwnerId").is(resourceOwnerId));
-        return mongoTemplate.find(query, Resource.class);
+    public Flux<? extends Resource> findMyResources(String resourceOwnerId) {
+        return mongoTemplate.find(query(where("metadata.resourceOwnerId").is(resourceOwnerId)), resourceType)
+                .switchIfEmpty(Flux.error(ResourceRetrievalException::new));
 
     }
 
@@ -87,9 +89,8 @@ public abstract class ResourceService<T extends Resource> {
 
         return repo.findAllById(ids)
                     .flatMap(resource -> {
-                        Query query = new Query().addCriteria(Criteria.where("id").is(resource.getId()));
                         resource.getMetadata().setActive(false);
-                        return mongoTemplate.findAndReplace(query, resource).then();
+                        return mongoTemplate.findAndReplace(query(where("id").is(resource.getId())), resource).then();
                     });
 
     }
