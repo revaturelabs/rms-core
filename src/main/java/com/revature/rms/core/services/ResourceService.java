@@ -6,6 +6,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 import com.revature.rms.core.exceptions.*;
 import com.revature.rms.core.models.Resource;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
@@ -49,6 +50,7 @@ public abstract class ResourceService<T extends Resource> {
 
     public Flux<? extends Resource> findAll(MultiValueMap<String, String> parameters) {
 
+        Query query = new Query();
         List<String> paramKeys = new ArrayList<>(parameters.keySet());
         List<String> resourceFieldNames = Stream.concat(
                                                         Arrays.stream(resourceType.getDeclaredFields()),
@@ -60,23 +62,18 @@ public abstract class ResourceService<T extends Resource> {
 
         for (String paramKey : paramKeys) {
 
-            System.out.println("[DEBUG] - paramKey: " + paramKey);
-
             if (!resourceFieldNames.contains(paramKey)) {
                 String msg = "The field, " + paramKey + ", was not found on resource type, " + resourceType.getName();
                 return Flux.error(new InvalidRequestException(msg));
             }
 
-            String keyValue = parameters.getFirst(paramKey);
-            System.out.println("[DEBUG] - Provided key value: " + keyValue);
-            return mongoTemplate.find(query(where(paramKey).is(keyValue)), resourceType)
-                                .switchIfEmpty(Mono.error(ResourceRetrievalException::new));
+            query.addCriteria(where(paramKey).is(parameters.getFirst(paramKey)));
+
         }
 
+        return mongoTemplate.find(query, resourceType)
+                            .switchIfEmpty(Mono.error(ResourceRetrievalException::new));
 
-
-
-        return Flux.error(InternalServerException::new);
 
     }
 
