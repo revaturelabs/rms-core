@@ -67,7 +67,8 @@ public abstract class LoggingAspect {
     @AfterThrowing(pointcut = "logAll()", throwing = "e")
     public void errorOccurrence(JoinPoint jp, Exception e) {
         String methodSig = jp.getTarget().getClass().toString() + "." + jp.getSignature().getName();
-        logger.info("{} thrown in method: {}", e.getMessage(), methodSig);
+        logger.info("{} thrown in method: {}", e.getClass().getName(), methodSig);
+        e.printStackTrace(); // TODO delete
     }
 
 }

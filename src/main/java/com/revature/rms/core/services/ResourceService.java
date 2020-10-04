@@ -8,16 +8,14 @@ import com.revature.rms.core.models.Resource;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,13 +51,23 @@ public abstract class ResourceService<T extends Resource> {
 
         Query query = new Query();
         List<String> paramKeys = new ArrayList<>(parameters.keySet());
+
         List<String> resourceFieldNames = Stream.concat(
                                                         Arrays.stream(resourceType.getDeclaredFields()),
                                                         Arrays.stream(Resource.class.getDeclaredFields())
-                                                        )
+                                                )
                                                 .map(Field::getName)
                                                 .collect(Collectors.toList());
 
+        List<String> resourceEnumNames = Stream.concat(
+                                                        Arrays.stream(resourceType.getDeclaredFields()),
+                                                        Arrays.stream(Resource.class.getDeclaredFields())
+                                                )
+                                                .map(Field::getType)
+                                                .filter(Class::isEnum)
+                                                .map(Class::getSimpleName)
+                                                .map(String::toLowerCase)
+                                                .collect(Collectors.toList());
 
         for (String paramKey : paramKeys) {
 
@@ -68,7 +76,16 @@ public abstract class ResourceService<T extends Resource> {
                 return Flux.error(new InvalidRequestException(msg));
             }
 
-            query.addCriteria(where(paramKey).is(parameters.getFirst(paramKey)));
+            String paramVal = Optional.ofNullable(parameters.getFirst(paramKey))
+                                      .orElseThrow(() -> new RuntimeException("Unexpected null value found in parameter map"));
+
+            System.out.println("paramKey: " + paramKey + "\nValue: " + paramVal);
+
+            if (resourceEnumNames.contains(paramKey)) {
+                query.addCriteria(where(paramKey).is(paramVal.toUpperCase()));
+            } else {
+                query.addCriteria(where(paramKey).is(paramVal));
+            }
 
         }
 
