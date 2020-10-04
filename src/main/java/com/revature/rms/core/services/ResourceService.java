@@ -13,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,10 +36,10 @@ public abstract class ResourceService<T extends Resource> {
     protected final ReactiveMongoTemplate mongoTemplate;
     private final Class<? extends Resource> resourceType;
 
-    public ResourceService(ReactiveMongoRepository<T, String> repo, ReactiveMongoTemplate template, Class<? extends Resource> resourceType) {
+    public ResourceService(ReactiveMongoRepository<T, String> repo, ReactiveMongoTemplate template) {
         this.repo = repo;
         this.mongoTemplate = template;
-        this.resourceType = resourceType;
+        this.resourceType = (Class<? extends Resource>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
     public Flux<T> findAll() {
